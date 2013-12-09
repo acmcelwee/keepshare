@@ -78,6 +78,14 @@ with EventBus.RefOwner {
       }
     } else {
       v("Prompting for password search")
+
+      // TODO
+      // Obviously lots of code paths to clean up, but I'd rather go straight to a custom
+      // search than search based on the package name.
+
+      // Switch back to the previous keyboard so the search is possible
+      quitIME()
+
       if (!packagePrompted.exists(_==info.packageName)) {
         packagePrompted = Option(info.packageName)
 
@@ -97,7 +105,9 @@ with EventBus.RefOwner {
             startActivity(intent)
             EventBus.Remove
         }
-        val intent = new Intent(this, classOf[IMESearchActivity])
+
+        // Launch the Search activity to find the desired credentials
+        val intent = new Intent(this, classOf[SearchableActivity])
         intent.addFlags(
           Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_MULTIPLE_TASK)
         intent.putExtra(PasswordIME.EXTRA_PACKAGE, info.packageName)
